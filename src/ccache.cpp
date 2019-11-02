@@ -2570,6 +2570,19 @@ cc_process_args(struct args* args,
       found_fpch_preprocess = true;
     }
 
+    // Modules are handles on demand as necessary in the background,
+    // so there is no need to cache them, they can be in practice ignored.
+    // All that is needed is to correctly depend also on module.modulemap files,
+    // and those are included only in depend mode (preprocessed output does not
+    // list them).
+    if ((!g_config.depend_mode() || !g_config.direct_mode())
+        && str_eq(argv[i], "-fmodules")) {
+      cc_log("Compiler option %s is unsupported without direct depend mode", argv[i]);
+      stats_update(STATS_UNSUPPORTED_OPTION);
+      result = false;
+      goto out;
+    }
+
     // We must have -c.
     if (str_eq(argv[i], "-c")) {
       found_c_opt = true;

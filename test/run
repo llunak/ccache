@@ -421,6 +421,7 @@ readonly
 readonly_direct
 cleanup
 pch
+modules
 upgrade
 input_charset
 nvcc
